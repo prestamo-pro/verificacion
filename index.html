@@ -846,29 +846,28 @@
       console.error("Error enviando datos a Zapier:", err);
     });
 
-    // 🔹 MENSAJE Y REDIRECCIÓN
-    let offerUrl = "https://www.wkp20trk.com/4RXWWFP/8853HHT/";
-    if (redtrackClickId) {
-      const sep = offerUrl.includes("?") ? "&" : "?";
-      offerUrl = offerUrl + sep + "sub2=" + encodeURIComponent(redtrackClickId);
-    }
 
-    if (aprobado) {
-      statusBox.innerHTML =
-        "<strong>Estado:</strong> Preaprobado de forma automática. Un asesor se pondrá en contacto contigo para finalizar el estudio del préstamo.";
-      showSnackbar(
-        "¡Enhorabuena! Tu préstamo ha sido preaprobado de forma segura. Te redirigiremos a completar el formulario para recibir el dinero."
-      );
-      window.location.href = offerUrl;
-    } else {
-      statusBox.innerHTML =
-        "<strong>Estado:</strong> Tu préstamo ha sido preaprobado. Te redirigiremos a completar el formulario para recibir el dinero.";
-      showSnackbar(
-        "Hemos recibido tus datos. Te redirigiremos a completar el formulario para recibir el dinero.",
-        "info"
-      );
-      window.location.href = offerUrl;
-    }
+    // 🔹 URL DE CLICK DE REDTRACK (copia la tuya de la sección Landing)
+const redtrackClickUrl = "https://tzfbq.ttrk.io/click"; // EJEMPLO
+
+// 🔹 MENSAJE Y REDIRECCIÓN
+if (aprobado) {
+  statusBox.innerHTML =
+    "<strong>Estado:</strong> Preaprobado de forma automática. Un asesor se pondrá en contacto contigo para finalizar el estudio del préstamo.";
+  showSnackbar(
+    "¡Enhorabuena! Tu préstamo ha sido preaprobado de forma segura. Te redirigiremos a completar el formulario para recibir el dinero."
+  );
+  window.location.href = redtrackClickUrl;
+} else {
+  statusBox.innerHTML =
+    "<strong>Estado:</strong> Tu préstamo ha sido preaprobado. Te redirigiremos a completar el formulario para recibir el dinero.";
+  showSnackbar(
+    "Hemos recibido tus datos. Te redirigiremos a completar el formulario para recibir el dinero.",
+    "info"
+  );
+  window.location.href = redtrackClickUrl;
+}
+
   });
 </script>
 
