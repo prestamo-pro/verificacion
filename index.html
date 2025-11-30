@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verificación de Aprobación de Préstamo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --primary: #0052ff;
+      --primary-soft: #e7efff;
+      --accent: #ff8a00;
+      --bg: #f5f7ff;
+      --text-main: #141a33;
+      --text-soft: #6c7285;
+      --border-soft: #dde3f0;
+      --success: #16a34a;
+      --error: #dc2626;
+      --radius-lg: 18px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    header {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.03em;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      box-shadow: 0 10px 18px rgba(37, 99, 235, 0.4);
+    }
+
+    .logo span:nth-child(2) {
+      color: var(--primary);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary,
+    .btn-outline {
+      border-radius: 999px;
+      padding: 10px 22px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease,
+        background 0.12s ease, color 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(37, 99, 235, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-outline {
+      border: 1px solid var(--border-soft);
+      background: #fff;
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      background: var(--primary-soft);
+    }
+
+    /* Layout principal: dos columnas en escritorio */
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    .hero-section {
+      order: 1; /* en escritorio: hero a la izquierda */
+    }
+
+    .card-section {
+      order: 2; /* en escritorio: tarjeta a la derecha */
+      width: 100%;
+    }
+
+    /* RESPONSIVE: una columna, tarjeta primero y hero debajo */
+    @media (max-width: 880px) {
+      main {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-section {
+        order: 1;
+      }
+
+      .hero-section {
+        order: 2;
+      }
+
+      header {
+        align-items: flex-start;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .header-actions {
+        justify-content: flex-start;
+      }
+
+      .header-actions .btn-primary,
+      .header-actions .btn-outline {
+        padding: 8px 14px;
+        font-size: 12px;
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 5vw, 44px);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .hero-title span {
+      display: block;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: var(--text-soft);
+      margin-bottom: 24px;
+      max-width: 420px;
+    }
+
+    .rating-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 12px;
+      box-shadow: var(--shadow-soft);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .rating-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: var(--success);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .avatars {
+      display: flex;
+      align-items: center;
+      margin-left: 6px;
+    }
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 2px solid #fff;
+      background: linear-gradient(135deg, #f97316, #ec4899);
+      margin-left: -6px;
+    }
+
+    .avatar:nth-child(2) {
+      background: linear-gradient(135deg, #22c55e, #0ea5e9);
+    }
+
+    .avatar:nth-child(3) {
+      background: linear-gradient(135deg, #eab308, #6366f1);
+    }
+
+    .avatar-count {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 2px solid #fff;
+      background: #e5e7eb;
+      margin-left: -6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 10px;
+      color: #4b5563;
+      font-weight: 600;
+    }
+
+    .security-banner {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      align-items: flex-start;
+    }
+
+    .security-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 22px rgba(148, 163, 184, 0.35);
+      flex-shrink: 0;
+    }
+
+    .lock-symbol {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--primary);
+      border-radius: 7px;
+      position: relative;
+    }
+
+    .lock-symbol::before {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 6px;
+      border-radius: 999px;
+      border: 2px solid var(--primary);
+      border-bottom: none;
+      top: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .security-text h3 {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .security-text p {
+      font-size: 13px;
+      color: var(--text-soft);
+      line-height: 1.4;
+    }
+
+    /* Card derecha */
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      padding: 22px 20px 18px;
+    }
+
+    .card-heading {
+      font-weight: 700;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+
+    .field-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--text-soft);
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 11px 12px;
+      padding-right: 38px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      font-size: 14px;
+      outline: none;
+      transition: border 0.12s ease, box-shadow 0.12s ease, background 0.12s;
+      background: #f9fafb;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.18);
+    }
+
+    input.error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.2);
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      opacity: 0.48;
+    }
+
+    .helper {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+
+    .error-text {
+      font-size: 12px;
+      color: var(--error);
+      margin-top: 4px;
+      display: none;
+    }
+
+    .trust-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text-soft);
+      flex-wrap: wrap;
+    }
+
+    .trust-row span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .trust-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.28);
+    }
+
+    .btn-submit {
+      margin-top: 18px;
+      width: 100%;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent), #ffb200);
+      box-shadow: 0 16px 35px rgba(248, 150, 30, 0.45);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 45px rgba(248, 150, 30, 0.55);
+    }
+
+    /* zonas de políticas y logos */
+    .policies {
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border-soft);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .policies {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .policies-text {
+      font-size: 11px;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+
+    .policies-text strong {
+      color: var(--text-main);
+    }
+
+    .logos-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .logo-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      font-size: 10px;
+      background: #f9fafb;
+    }
+
+    .mini-logo {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: var(--primary);
+    }
+
+    .mini-logo.grey {
+      border-color: #9ca3af;
+      color: #6b7280;
+    }
+
+    .mini-logo.green {
+      border-color: #16a34a;
+      color: #16a34a;
+    }
+
+    /* mensaje de estado */
+    .status-box {
+      margin-top: 16px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px dashed var(--border-soft);
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .status-box strong {
+      color: var(--text-main);
+    }
+
+    /* snackbar de resultado */
+    .snackbar {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%) translateY(120%);
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: #16a34a;
+      color: #fff;
+      font-size: 14px;
+      box-shadow: 0 18px 45px rgba(22, 163, 74, 0.45);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .snackbar.error {
+      background: #dc2626;
+      box-shadow: 0 18px 45px rgba(220, 38, 38, 0.45);
+    }
+
+    .snackbar.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0%);
+    }
+
+    .snackbar-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 8px 16px 24px;
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-mark">P</div>
+      <span>Préstamo</span><span>Seguro</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-outline" type="button">
+        🔒 Área clientes
+      </button>
+      <button class="btn-primary" type="button">
+        Solicitar ahora
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Columna derecha convertida en .card-section -->
+    <section class="card-section">
+      <div class="card">
+        <div class="card-heading">Verifica la aprobación de tu préstamo</div>
+
+        <form id="loan-form" novalidate>
+          <div class="field-group">
+            <label for="nombre">Nombre completo</label>
+            <div class="input-wrapper">
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                placeholder="Ej. Ana María García López"
+                autocomplete="name"
+                required
+              />
+              <span class="input-icon">👤</span>
+            </div>
+            <div class="helper">
+              Debe coincidir con tu documento de identidad.
+            </div>
+            <div class="error-text" id="error-nombre">
+              Por favor, indica tu nombre completo.
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="dni">DNI / NIE</label>
+            <div class="input-wrapper">
+              <input
+                id="dni"
+                name="dni"
+                type="text"
+                placeholder="Ej. 12345678Z"
+                autocomplete="off"
+                required
+              />
+              <span class="input-icon">🪪</span>
+            </div>
+            <div class="helper">
+              Solo se utiliza para verificar tu identidad y no se comparte con
+              terceros.
+            </div>
+            <div class="error-text" id="error-dni">
+              Introduce un DNI/NIE válido (8 números y una letra).
+            </div>
+          </div>
+
+          <button class="btn-primary btn-submit" type="submit">
+            Verificar 
+          </button>
+
+          <div class="status-box" id="status-box">
+            <strong>Estado:</strong> A la espera de datos para iniciar la
+            verificación segura.
+          </div>
+
+          <div class="trust-row">
+            <span>
+              <span class="trust-dot"></span>
+              Conexión segura recomendada (HTTPS)
+            </span>
+            <span>•</span>
+            <span>Datos tratados según RGPD</span>
+          </div>
+
+          <div class="policies">
+            <div class="policies-text">
+              Toda la información introducida debe procesarse en servidores
+              seguros, <strong>cifrada y protegida</strong> conforme a la
+              <a href="#">Política de Privacidad</a> y a la
+              <a href="#">Política de Protección de Datos</a>. Este formulario
+              es un ejemplo visual y no guarda realmente tus datos.
+            </div>
+
+            <div class="logos-row">
+              <div class="logo-chip">
+                <div class="mini-logo">TLS</div>
+                SSL/TLS Ready
+              </div>
+              <div class="logo-chip">
+                <div class="mini-logo grey">GD</div>
+                RGPD Compliant
+              </div>
+              <div class="logo-chip">
+                <div class="mini-logo green">✓</div>
+                Datos cifrados
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Columna izquierda convertida en .hero-section -->
+    <section class="hero-section">
+      <h1 class="hero-title">
+        <span>Préstamos personales</span>
+        <span>sin moverte de casa</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Introduce tus datos para verificar de forma segura si tu préstamo puede
+        ser aprobado en cuestión de segundos.
+      </p>
+
+      <div class="rating-row">
+        <div class="rating-icon">★</div>
+        <span><strong>4,9 / 5</strong> clientes satisfechos</span>
+        <div class="avatars">
+          <div class="avatar"></div>
+          <div class="avatar"></div>
+          <div class="avatar"></div>
+          <div class="avatar-count">+9k</div>
+        </div>
+      </div>
+
+      <div class="security-banner">
+        <div class="security-icon">
+          <div class="lock-symbol"></div>
+        </div>
+        <div class="security-text">
+          <h3>Cifrado y seguridad avanzados</h3>
+          <p>
+            Este ejemplo de interfaz está pensado para integrarse con servidores
+            que almacenan la información cifrada siguiendo las mejores
+            prácticas de seguridad.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      © 2025 PréstamoSeguro (maqueta de ejemplo). No introduce ni almacena datos
+      reales.
+    </div>
+    <div>
+      <a href="#">Aviso legal</a> ·
+      <a href="#">Política de cookies</a> ·
+      <a href="#">Preferencias de privacidad</a>
+    </div>
+  </footer>
+
+  <!-- Snackbar -->
+  <div class="snackbar" id="snackbar">
+    <div class="snackbar-icon" id="snackbar-icon">✓</div>
+    <span id="snackbar-text"></span>
+  </div>
+
+  <script>
+    const form = document.getElementById("loan-form");
+    const nombreInput = document.getElementById("nombre");
+    const dniInput = document.getElementById("dni");
+    const errorNombre = document.getElementById("error-nombre");
+    const errorDni = document.getElementById("error-dni");
+    const statusBox = document.getElementById("status-box");
+
+    const snackbar = document.getElementById("snackbar");
+    const snackbarText = document.getElementById("snackbar-text");
+    const snackbarIcon = document.getElementById("snackbar-icon");
+
+    function showSnackbar(message, type = "success") {
+      snackbarText.textContent = message;
+
+      if (type === "error") {
+        snackbar.classList.add("error");
+        snackbarIcon.textContent = "!";
+      } else {
+        snackbar.classList.remove("error");
+        snackbarIcon.textContent = "✓";
+      }
+
+      snackbar.classList.add("show");
+      setTimeout(() => {
+        snackbar.classList.remove("show");
+      }, 3200);
+    }
+
+    function validarDNI(dni) {
+      // Valida formato básico de DNI: 8 números + letra final
+      const regex = /^([0-9]{8})([A-Za-z])$/;
+      const match = dni.trim().toUpperCase().match(regex);
+      if (!match) return false;
+
+      const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+      const numero = parseInt(match[1], 10);
+      const letra = match[2];
+
+      const letraCorrecta = letras[numero % 23];
+      return letra === letraCorrecta;
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      let valido = true;
+
+      // reset errores
+      nombreInput.classList.remove("error");
+      dniInput.classList.remove("error");
+      errorNombre.style.display = "none";
+      errorDni.style.display = "none";
+
+      if (!nombreInput.value.trim()) {
+        valido = false;
+        nombreInput.classList.add("error");
+        errorNombre.style.display = "block";
+      }
+
+      const dniValue = dniInput.value.trim();
+      if (!dniValue || !validarDNI(dniValue)) {
+        valido = false;
+        dniInput.classList.add("error");
+        errorDni.style.display = "block";
+      }
+
+      if (!valido) {
+        statusBox.innerHTML =
+          "<strong>Estado:</strong> Revisa los campos marcados en rojo para continuar con la verificación segura.";
+        showSnackbar(
+          "Hay errores en el formulario. Corrige los datos para continuar.",
+          "error"
+        );
+        return;
+      }
+
+      // Lógica de "aprobación" simulada
+      const aprobado = Math.random() > 0.35; // resultado aleatorio de ejemplo
+
+      if (aprobado) {
+        statusBox.innerHTML =
+          "<strong>Estado:</strong> Preaprobado de forma automática. Un asesor se pondrá en contacto contigo para finalizar el estudio del préstamo.";
+        showSnackbar(
+          "¡Enhorabuena! Tu préstamo ha sido preaprobado de forma segura."
+        );
+      } else {
+        statusBox.innerHTML =
+          "<strong>Estado:</strong> Necesitamos revisar tu solicitud manualmente. Un especialista analizará tus datos con total confidencialidad.";
+        showSnackbar(
+          "Hemos recibido tus datos. Tu solicitud será revisada de forma manual.",
+          "info"
+        );
+      }
+    });
+  </script>
+</body>
+</html>
