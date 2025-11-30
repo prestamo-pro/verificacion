@@ -725,30 +725,28 @@
   </div>
 <script type="text/javascript" src="https://tzfbq.ttrk.io/track.js"></script>
 <script>
+  // Leer parámetros de la URL (usamos un nombre único para evitar choques)
+  const urlParamsRT = new URLSearchParams(window.location.search);
 
-  // Leer parámetros de la URL
-const urlParams = new URLSearchParams(window.location.search);
+  // PRIORIDAD: rtkcid (clickid de RedTrack)
+  let redtrackClickId = urlParamsRT.get('rtkcid');
 
-// PRIORIDAD: rtkcid (clickid de RedTrack)
-let redtrackClickId = urlParams.get('rtkcid');
-
-// Si no hay rtkcid, intentamos con sub2 (por si en el futuro lo usas bien)
-if (!redtrackClickId) {
-  redtrackClickId = urlParams.get('sub2');
-}
-
-// Guardar en localStorage para reutilizar en redirecciones futuras
-if (redtrackClickId) {
-  localStorage.setItem('redtrack_clickid', redtrackClickId);
-} else {
-  // si no viene en la URL, intentar recuperar uno previo
-  const stored = localStorage.getItem('redtrack_clickid');
-  if (stored) {
-    redtrackClickId = stored;
+  // Si no hay rtkcid, intentamos con sub2 (por si en el futuro lo usas bien)
+  if (!redtrackClickId) {
+    redtrackClickId = urlParamsRT.get('sub2');
   }
-}
 
-  
+  // Guardar en localStorage para reutilizar en redirecciones futuras
+  if (redtrackClickId) {
+    localStorage.setItem('redtrack_clickid', redtrackClickId);
+  } else {
+    // si no viene en la URL, intentar recuperar uno previo
+    const stored = localStorage.getItem('redtrack_clickid');
+    if (stored) {
+      redtrackClickId = stored;
+    }
+  }
+
   const form = document.getElementById("loan-form");
   const nombreInput = document.getElementById("nombre");
   const dniInput = document.getElementById("dni");
@@ -849,29 +847,28 @@ if (redtrackClickId) {
     });
 
     // 🔹 MENSAJE Y REDIRECCIÓN
-let offerUrl = "https://www.wkp20trk.com/4RXWWFP/8853HHT/";
-if (redtrackClickId) {
-  const sep = offerUrl.includes("?") ? "&" : "?";
-  offerUrl = offerUrl + sep + "sub2=" + encodeURIComponent(redtrackClickId);
-}
+    let offerUrl = "https://www.wkp20trk.com/4RXWWFP/8853HHT/";
+    if (redtrackClickId) {
+      const sep = offerUrl.includes("?") ? "&" : "?";
+      offerUrl = offerUrl + sep + "sub2=" + encodeURIComponent(redtrackClickId);
+    }
 
-if (aprobado) {
-  statusBox.innerHTML =
-    "<strong>Estado:</strong> Preaprobado de forma automática. Un asesor se pondrá en contacto contigo para finalizar el estudio del préstamo.";
-  showSnackbar(
-    "¡Enhorabuena! Tu préstamo ha sido preaprobado de forma segura. Te redirigiremos a completar el formulario para recibir el dinero."
-  );
-  window.location.href = offerUrl;
-} else {
-  statusBox.innerHTML =
-    "<strong>Estado:</strong> Tu préstamo ha sido preaprobado. Te redirigiremos a completar el formulario para recibir el dinero.";
-  showSnackbar(
-    "Hemos recibido tus datos. Te redirigiremos a completar el formulario para recibir el dinero.",
-    "info"
-  );
-  window.location.href = offerUrl;
-}
-
+    if (aprobado) {
+      statusBox.innerHTML =
+        "<strong>Estado:</strong> Preaprobado de forma automática. Un asesor se pondrá en contacto contigo para finalizar el estudio del préstamo.";
+      showSnackbar(
+        "¡Enhorabuena! Tu préstamo ha sido preaprobado de forma segura. Te redirigiremos a completar el formulario para recibir el dinero."
+      );
+      window.location.href = offerUrl;
+    } else {
+      statusBox.innerHTML =
+        "<strong>Estado:</strong> Tu préstamo ha sido preaprobado. Te redirigiremos a completar el formulario para recibir el dinero.";
+      showSnackbar(
+        "Hemos recibido tus datos. Te redirigiremos a completar el formulario para recibir el dinero.",
+        "info"
+      );
+      window.location.href = offerUrl;
+    }
   });
 </script>
 
