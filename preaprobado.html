@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Solicitud de Préstamo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff; /* Fondo blanco */
+      color: #000000;      /* Letras negras */
+      font-family: system-ui, sans-serif;
+    }
+
+    /* HEADER */
+    header {
+      width: 100%;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-logo {
+      max-width: 220px;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 22px;
+      line-height: 1.4;
+      margin-bottom: 25px;
+    }
+
+    .hero-image {
+      max-width: 360px;
+      width: 100%;
+      height: auto;
+      border-radius: 28px;
+      margin: 18px auto 24px;
+      display: block;
+    }
+
+    /* CAJA AMARILLA */
+    .yellow-box {
+      background: #ffd900;
+      padding: 28px 22px;
+      border-radius: 26px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    @media (min-width: 680px) {
+      .yellow-box {
+        flex-direction: row;         /* Botones uno al lado del otro */
+        padding: 32px 28px;
+      }
+    }
+
+    .btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      border-radius: 999px;
+      border: none;
+      font-size: 26px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+                  background 0.12s ease, color 0.12s ease;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+      letter-spacing: 0.01em;
+    }
+
+    .btn-main {
+      background: #002743;
+      color: #ffffff;
+    }
+
+    .btn-main:hover,
+    .btn-main:focus-visible {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 32px rgba(0, 39, 67, 0.45);
+      outline: none;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: #002743;
+      border: 3px solid #002743;
+    }
+
+    .btn-secondary:hover,
+    .btn-secondary:focus-visible {
+      background: #f1f5f9;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 32px rgba(0, 39, 67, 0.35);
+      outline: none;
+    }
+
+    .btn span.arrow {
+      font-size: 26px;
+      margin-left: 10px;
+    }
+
+    .legal {
+      margin-top: 25px;
+      font-size: 16px;
+      line-height: 1.4;
+      color: #333;
+    }
+
+    .logos {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <img
+      src="https://www.fiestacredito.es/wp-content/uploads/2023/01/fiestacredito_black_logo.svg"
+      alt="Fiesta Crédito"
+      class="header-logo"
+    />
+  </div>
+</header>
+
+<div class="container">
+  
+  <h1>¿Cuánto dinero necesitas?</h1>
+
+  <!-- Imagen debajo del H1 -->
+  <img
+    src="https://www.fiestacredito.es/wp-content/uploads/2025/06/your-micro-loan-quickly-and-instantly@3x.jpg"
+    alt="Tu micro préstamo rápido e instantáneo"
+    class="hero-image"
+  />
+
+  <p>Selecciona una de las opciones para continuar con tu solicitud de forma segura.</p>
+
+  <!-- CAJA AMARILLA CON BOTONES -->
+  <div class="yellow-box">
+    <button id="btn1" class="btn btn-main">
+      Solicitar Ahora <span class="arrow">➜</span>
+    </button>
+    <button id="btn2" class="btn btn-secondary">
+      Calculadora Online <span class="arrow">➜</span>
+    </button>
+  </div>
+
+  <p class="legal">
+    Puede encontrar préstamos a devolver entre 61 y 90 días.  
+    TAE con un mínimo de 0% y máximo de 317%.  
+    Ejemplo TAE: 300€ de 66 días. Coste préstamo: 45.26€.  
+    Total a devolver: 345.25€. TAE 203.72%.
+  </p>
+
+  <div class="logos">
+    confianza-online · godaddy
+  </div>
+</div>
+
+<!-- REDTRACK -->
+<script type="text/javascript" src="https://tzfbq.ttrk.io/track.js"></script>
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  let clickid = urlParams.get("rtkcid") || urlParams.get("sub2");
+
+  if (clickid) {
+    localStorage.setItem("rtkcid", clickid);
+  } else {
+    const stored = localStorage.getItem("rtkcid");
+    if (stored) clickid = stored;
+  }
+
+  const baseUrl = "https://tzfbq.ttrk.io/click";
+
+  function go() {
+    let url = baseUrl;
+    if (clickid) url += "?rtkcid=" + encodeURIComponent(clickid);
+    window.location.href = url;
+  }
+
+  document.getElementById("btn1").onclick = go;
+  document.getElementById("btn2").onclick = go;
+</script>
+
+<!-- FACEBOOK PIXEL -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2068634287237405');
+fbq('track', 'PageView');
+</script>
+
+<noscript>
+  <img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=2068634287237405&ev=PageView&noscript=1"/>
+</noscript>
+
+<!-- HOTJAR -->
+<script>
+(function(h,o,t,j,a,r){
+    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+    h._hjSettings={hjid:6589578,hjsv:6};
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+</body>
+</html>
