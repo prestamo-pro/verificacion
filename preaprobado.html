@@ -198,26 +198,29 @@
 <!-- REDTRACK -->
 <script type="text/javascript" src="https://tzfbq.ttrk.io/track.js"></script>
 <script>
-  const urlParams = new URLSearchParams(window.location.search);
-  let clickid = urlParams.get("rtkcid") || urlParams.get("sub2");
+  (function () {
+    // Usamos otro nombre para no chocar con otros scripts
+    const redirectParams = new URLSearchParams(window.location.search);
+    let clickid = redirectParams.get("rtkcid") || redirectParams.get("sub2");
 
-  if (clickid) {
-    localStorage.setItem("rtkcid", clickid);
-  } else {
-    const stored = localStorage.getItem("rtkcid");
-    if (stored) clickid = stored;
-  }
+    if (clickid) {
+      localStorage.setItem("rtkcid", clickid);
+    } else {
+      const stored = localStorage.getItem("rtkcid");
+      if (stored) clickid = stored;
+    }
 
-  const baseUrl = "https://tzfbq.ttrk.io/click";
+    const baseUrl = "https://tzfbq.ttrk.io/click";
 
-  function go() {
-    let url = baseUrl;
-    if (clickid) url += "?rtkcid=" + encodeURIComponent(clickid);
-    window.location.href = url;
-  }
+    function go() {
+      let url = baseUrl;
+      if (clickid) url += "?rtkcid=" + encodeURIComponent(clickid);
+      window.location.href = url;
+    }
 
-  document.getElementById("btn1").onclick = go;
-  document.getElementById("btn2").onclick = go;
+    document.getElementById("btn1").onclick = go;
+    document.getElementById("btn2").onclick = go;
+  })();
 </script>
 
 <!-- FACEBOOK PIXEL -->
